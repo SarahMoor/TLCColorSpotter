@@ -133,10 +133,10 @@ def main ():
     plt.show()
     '''
     
-    light_orange = (0, 0, 100)
-    dark_orange = (145, 60, 255)
-    # light (0, 0, 200) (0, 0, 0) (0, 0, 0) (0, 0, 100)
-    # dark (145, 60, 255), (145, 100, 255) (145, 60, 255) (0, 0, 50)
+    light_orange = (0,0,0)
+    dark_orange = (0,0,100)
+    # light (0, 0, 200) (0, 0, 0) (0, 0, 0) (0, 0, 100)(0, 0, 100)
+    # dark (145, 60, 255), (145, 100, 255) (145, 60, 255) (0, 0, 50)(145, 60, 255)
     
     # Normalise to 0 - 1 range for viewing
     
@@ -153,14 +153,15 @@ def main ():
     # Segment Nemo using inRange() function
     
     mask = cv2.inRange(hsv_nemo, light_orange, dark_orange)
+    plt.subplot(1, 2, 1)
+    plt.imshow(mask, cmap="gray")
     
     # Bitwise-AND mask and original image
     
-    result = cv2.bitwise_not(nemo, nemo, mask=mask)
+    result = cv2.bitwise_and(nemo, nemo, mask=mask)
     
     
     # Convert back to RGB in order to plot using `matplotlib.pyplot`
-    
     plt.subplot(1, 2, 1)
     plt.imshow(mask, cmap="gray")
     plt.subplot(1, 2, 2)
@@ -170,11 +171,11 @@ def main ():
     result = nemo
     
     
-    
+
     # trying to get rid of grey
     
-    light_white = (200, 10, 47)
-    dark_white = (226, 29, 33)
+    light_white = (145,60,255)
+    dark_white = (255, 255, 255)
     
     lw_square = np.full((10, 10, 3), light_white, dtype=np.uint8) / 255.0
     dw_square = np.full((10, 10, 3), dark_white, dtype=np.uint8) / 255.0
@@ -196,18 +197,13 @@ def main ():
     
     
     
-    # final_mask = mask + mask_white
+    final_mask = mask + mask_white
     
-    # final_result = cv2.bitwise_and(nemo, nemo, mask=final_mask)
-    
-    
-    
-    
-    
-    
+    final_result = cv2.bitwise_and(nemo, nemo, mask=final_mask)
+
     
     # replotting after filter
-    nemo = result
+    nemo = final_result
     
     r, g, b = cv2.split(nemo)
     
