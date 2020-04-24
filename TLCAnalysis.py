@@ -58,9 +58,15 @@ def get_colors(image, number_of_colors, show_chart):
     # sort to ensure correct color percentage
     counts = dict(sorted(counts.items()))
     
+     
+    print(counts)
+    
+    
     center_colors = clf.cluster_centers_
     # We get ordered colors by iterating through the keys
+    
     ordered_colors = [center_colors[i] for i in counts.keys()]
+    
     hex_names = [(closest_colour(ordered_colors[i])) for i in counts.keys()]
     hex_colors = [RGB2HEX(ordered_colors[i]) for i in counts.keys()]
     rgb_colors = [ordered_colors[i] for i in counts.keys()]
@@ -68,10 +74,14 @@ def get_colors(image, number_of_colors, show_chart):
     for i in counts.keys():
         print (ordered_colors[i], closest_colour(ordered_colors[i]))
     
-
+    # remove the first element, which we know will be black because that is the majority of the image after masking
+    counts_no_black = list(counts.values())
+    counts_no_black.pop(0)
+    hex_names.pop(0)
+    hex_colors.pop(0)
     if (show_chart):
         plt.figure(figsize = (8, 6))
-        plt.pie(counts.values(), labels = hex_names, colors = hex_colors)
+        plt.pie(counts_no_black, labels = hex_names, colors = hex_colors)
     
     return rgb_colors
 
@@ -96,7 +106,6 @@ def main ():
     plt.imshow(nemo)
     plt.show()
     
-    '''
     # Plotting the image on 3D plot
     
     r, g, b = cv2.split(nemo)
@@ -115,10 +124,10 @@ def main ():
     axis.set_ylabel("Green")
     axis.set_zlabel("Blue")
     #plt.show()
-    '''
+
     hsv_nemo = cv2.cvtColor(nemo, cv2.COLOR_RGB2HSV)
     
-    '''
+
     h, s, v = cv2.split(hsv_nemo)
     
     fig = plt.figure()
@@ -131,10 +140,10 @@ def main ():
     axis.set_ylabel("Saturation")
     axis.set_zlabel("Value")
     plt.show()
-    '''
+
     
-    light_orange = (0,0,0)
-    dark_orange = (0,0,100)
+    light_orange = (0,100,120)
+    dark_orange = (175,200,200)
     # light (0, 0, 200) (0, 0, 0) (0, 0, 0) (0, 0, 100)(0, 0, 100)
     # dark (145, 60, 255), (145, 100, 255) (145, 60, 255) (0, 0, 50)(145, 60, 255)
     
@@ -172,7 +181,7 @@ def main ():
     
     
 
-    # trying to get rid of grey
+    # # trying to get rid of grey
     
     light_white = (145,60,255)
     dark_white = (255, 255, 255)
